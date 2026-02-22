@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorpresa</title>
+    <title>PIGA CLEAR</title>
     <style>
         body {
             margin: 0;
@@ -18,59 +18,113 @@
             cursor: pointer;
         }
 
+        /* Contenitore per le scritte piccole, così possiamo nasconderle tutte insieme */
+        #piga-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none; /* Non blocca i click */
+        }
+
+        .background-text {
+            position: absolute;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            transition: all 2s linear;
+        }
+
         #target {
-            font-size: 15vw;
+            font-size: 18vw;
             user-select: none;
-            transition: transform 0.1s;
-            display: block; /* Assicuriamoci che sia visibile all'inizio */
+            z-index: 10;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+            animation: pulse 1s infinite alternate;
         }
 
-        #target:active {
-            transform: scale(0.9);
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
         }
 
-        /* GIF GIGANTE: copre tutto lo schermo disponibile */
         #gif {
             width: 100vw;
             height: 100vh;
-            object-fit: contain; /* Mantiene le proporzioni senza tagliarla, usa 'cover' se vuoi riempire tutto il rettangolo */
+            object-fit: contain; /* Nitida e proporzionata */
             display: none;
             position: absolute;
             top: 0;
             left: 0;
+            z-index: 100; /* Sopra a tutto il resto */
+            background-color: black;
         }
 
+        /* Semplice vibrazione per il click */
         @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            50% { transform: translate(-1px, 2px) rotate(1deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+            0% { transform: translate(0); }
+            25% { transform: translate(5px, -5px); }
+            50% { transform: translate(-5px, 5px); }
+            75% { transform: translate(5px, 5px); }
+            100% { transform: translate(0); }
         }
     </style>
 </head>
 <body>
 
+    <div id="piga-container"></div>
     <div id="target">PIGA</div>
-
     <img id="gif" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzdrMDEwNHJvN3ZyczVrc2k1N2VnNGR6eHVlbXBhdWM2c2N6YTQybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uTSLJk2YEutck/giphy.gif">
 
     <script>
         const target = document.getElementById('target');
         const gif = document.getElementById('gif');
+        const container = document.getElementById('piga-container');
+        const particles = [];
 
-        // Click sulla scritta -> Mostra la GIF
+        function createPiga(count) {
+            for (let i = 0; i < count; i++) {
+                const span = document.createElement('span');
+                span.innerText = 'PIGA';
+                span.className = 'background-text';
+                span.style.left = Math.random() * 100 + '%';
+                span.style.top = Math.random() * 100 + '%';
+                container.appendChild(span);
+                particles.push(span);
+            }
+        }
+
+        function moveParticles() {
+            particles.forEach(p => {
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+            });
+        }
+
+        createPiga(150);
+        setInterval(moveParticles, 2000);
+
         target.addEventListener('click', () => {
+            // Nasconde tutto il caos
             target.style.display = 'none';
+            container.style.display = 'none';
+            
+            // Mostra solo la GIF
             gif.style.display = 'block';
-            document.body.style.animation = "shake 0.5s";
+            document.body.style.animation = "shake 0.2s ease-in-out";
         });
 
-        // Click sulla GIF -> Torna alla scritta PIGA
         gif.addEventListener('click', () => {
             gif.style.display = 'none';
+            
+            // Fa tornare il caos
             target.style.display = 'block';
-            document.body.style.animation = "none"; // Reset animazione
+            container.style.display = 'block';
+            document.body.style.animation = "none";
+            
+            // Aggiunge altre 30 scritte per il prossimo giro
+            createPiga(30);
         });
     </script>
 </body>
