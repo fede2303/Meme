@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorpresa</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            color: white;
+            font-family: 'Arial Black', sans-serif;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        #target {
+            font-size: 15vw;
+            user-select: none;
+            transition: transform 0.1s;
+            display: block; /* Assicuriamoci che sia visibile all'inizio */
+        }
+
+        #target:active {
+            transform: scale(0.9);
+        }
+
+        /* GIF GIGANTE: copre tutto lo schermo disponibile */
+        #gif {
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain; /* Mantiene le proporzioni senza tagliarla, usa 'cover' se vuoi riempire tutto il rettangolo */
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            50% { transform: translate(-1px, 2px) rotate(1deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="target">PIGA</div>
+
+    <img id="gif" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzdrMDEwNHJvN3ZyczVrc2k1N2VnNGR6eHVlbXBhdWM2c2N6YTQybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uTSLJk2YEutck/giphy.gif">
+
+    <script>
+        const target = document.getElementById('target');
+        const gif = document.getElementById('gif');
+
+        // Click sulla scritta -> Mostra la GIF
+        target.addEventListener('click', () => {
+            target.style.display = 'none';
+            gif.style.display = 'block';
+            document.body.style.animation = "shake 0.5s";
+        });
+
+        // Click sulla GIF -> Torna alla scritta PIGA
+        gif.addEventListener('click', () => {
+            gif.style.display = 'none';
+            target.style.display = 'block';
+            document.body.style.animation = "none"; // Reset animazione
+        });
+    </script>
+</body>
+</html>
